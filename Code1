@@ -1,0 +1,110 @@
+#define MOT_A1_PIN 5
+
+#define MOT_A2_PIN 6
+
+
+void setup(void)
+
+{
+
+
+
+  pinMode(MOT_A1_PIN, OUTPUT);
+
+  pinMode(MOT_A2_PIN, OUTPUT);
+
+  
+
+ 
+  digitalWrite(MOT_A1_PIN, LOW);
+
+  digitalWrite(MOT_A2_PIN, LOW);
+
+ 
+
+
+  Serial.begin(9600);
+
+}
+
+
+void set_motor_pwm(int pwm, int IN1_PIN, int IN2_PIN)
+
+{
+
+  if (pwm < 0) { 
+
+    analogWrite(IN1_PIN, -pwm);
+
+    digitalWrite(IN2_PIN, LOW);
+
+
+  } else { // stop or forward
+
+    digitalWrite(IN1_PIN, LOW);
+
+    analogWrite(IN2_PIN, pwm);
+
+  }
+
+}
+
+
+void set_motor_currents(int pwm_A)
+
+{
+
+  set_motor_pwm(pwm_A, MOT_A1_PIN, MOT_A2_PIN);
+
+
+
+  Serial.print("Set motor A PWM = ");
+
+  Serial.println(pwm_A);
+
+ }
+
+
+
+void spin_and_wait(int pwm_A,int duration)
+
+{
+
+  set_motor_currents(pwm_A);
+
+  delay(duration);
+
+}
+
+
+void loop(void)
+
+{
+
+ 
+
+  for (int i = 0; i < 11; i++) {
+
+    spin_and_wait(25*i, 500);
+
+  }
+
+  spin_and_wait(255,2000);
+
+
+
+  for (int i = 0; i < 21 ; i++) {
+
+    spin_and_wait(255 - 25*i, 500);
+
+  }
+
+
+
+  spin_and_wait(-255,2000);
+
+
+  spin_and_wait(0,2000);
+
+
+}
